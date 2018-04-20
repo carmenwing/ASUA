@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+'use strict';
+
+let mqtt = require('mqtt');
+
+let client = mqtt.connect("mqtt://netigma.netcad.com.tr",{
+    username : "asua_beia",
+    password : "z4JkPF9m"
+});
+
+const KEY_NAMES = [
+	"asua/BEIA_Leuven/TR2ARelativeHumidity",
+	"asua/BEIA_Leuven/TR2ATemperature",
+	"asua/BEIA_Leuven/LEV1Level",
+];
+
+
+
+client.on('connect', () => {
+    console.log("Connected to ASUA MQTT Broker!");
+
+   client.publish(KEY_NAMES[0], JSON.stringify({
+            value: parseFloat("40.59"),
+            resultTime: new Date().toISOString(),
+        }));
+        client.publish(KEY_NAMES[1], JSON.stringify({
+             value: parseFloat("21.58"),
+            resultTime: new Date().toISOString(),
+        }));
+        client.publish(KEY_NAMES[2], JSON.stringify({
+             value: parseFloat("-0.06288"),
+            resultTime: new Date().toISOString(),
+        }));
+    
+});
+
+client.on('message', function (topic, message) {
+  // message is Buffer 
+  console.log(message.toString());
+  client.end();
+});
